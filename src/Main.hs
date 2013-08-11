@@ -9,6 +9,7 @@ process :: FilePath -> IO ()
 process filename | isCpp filename  =  do 
 					contents <- L.readFile filename
 					putStr (getIncludes (lines (L.unpack contents)))
+					--putStrLn (info (lines (L.unpack contents)))
                  | otherwise = return()
 
 
@@ -22,7 +23,11 @@ mapDir proc fp = do
 
 
 getIncludes :: [String] -> String
-getIncludes l = unlines (filter isIncludeStatement l)
+getIncludes l = unlines (map getIncludeName (filter isIncludeStatement l))
+
+
+info :: [String] -> String
+info l = "Number of includes: " ++ show (length l)
 
 
 isCpp :: [Char] -> Bool
@@ -33,11 +38,24 @@ isIncludeStatement :: String -> Bool
 isIncludeStatement = startswith "#include" . lstrip
 
 getIncludeName :: String -> String
-getIncludeName s = takeWhile (\x -> x /= '"') s
+getIncludeName = removeFolders . head . tail . words . replaceQuotes
+
+
+replaceQuotes :: String -> String
+replaceQuotes ('"':cs) = ' ' : replaceQuotes cs
+replaceQuotes ('<':cs) = ' ' : replaceQuotes cs
+replaceQuotes ('>':cs) = ' ' : replaceQuotes cs
+replaceQuotes (c:cs)   =  c  : replaceQuotes cs
+replaceQuotes _        = []
+
+
+removeFolders :: String -> String
+removeFolders s = last (words (replace "/" " " s))
+
 
 
 main :: IO ()
---main = mapDir process "/Users/tobysuggate/Desktop/LCWM4/"
-main = mapDir process "/Users/tobysuggate/Desktop/LCWM4/CrossPlatform/Portable/CrossPlatform/ADIDat/DatCore/"
+main = mapDir process "/Users/tobysuggate/Desktop/LCWM4/"
+--main = mapDir process "/Users/tobysuggate/Desktop/LCWM4/CrossPlatform/Portable/CrossPlatform/ADIDat/DatCore/"
 --main = mapDir process "/Users/tobysuggate/Desktop/untitledfolder/"
 --main = mapDir process "/Users/tobysuggate/Desktop/LCWM4/LabChart/PCDevelop/LabChart/Calculations/"
