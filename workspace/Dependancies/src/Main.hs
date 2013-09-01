@@ -1,15 +1,15 @@
 {-# LANGUAGE DoAndIfThenElse #-}
 
-import System.Directory (doesFileExist, getDirectoryContents)
-import System.FilePath ((</>))
-import Data.String.Utils
 import qualified Data.ByteString.Char8 as L
+import           Data.String.Utils
+import           System.Directory      (doesFileExist, getDirectoryContents)
+import           System.FilePath       ((</>))
 
 process :: FilePath -> IO ()
-process filename | isCpp filename  =  do 
-					contents <- L.readFile filename
-					putStr (getIncludes (lines (L.unpack contents)))
-					--putStrLn (info (lines (L.unpack contents)))
+process filename | isCpp filename  =  do
+                   contents <- L.readFile filename
+                   putStr (getIncludes (lines (L.unpack contents)))
+                   --putStrLn (info (lines (L.unpack contents)))
                  | otherwise = return()
 
 

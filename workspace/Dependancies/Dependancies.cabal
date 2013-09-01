@@ -13,6 +13,10 @@ executable Dependancies
                    directory,
                    containers,
                    filepath,
-                   MissingH
+                   MissingH,
+                   bytestring
   ghc-options:     -Wall
+  other-modules:   
+                   Blocks,
+                   RemoveComments
 

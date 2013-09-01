@@ -1,0 +1,22 @@
+name:           Dependancies
+version:        0.1
+cabal-version:  >=1.2
+build-type:     Simple
+author:         tobysuggate
+
+executable Dependancies
+  hs-source-dirs:  src
+  main-is:         Main.hs
+  build-depends:   
+                   base >= 4,
+                   regex-compat,
+                   directory,
+                   containers,
+                   filepath,
+                   MissingH,
+                   bytestring
+  ghc-options:     -Wall
+  other-modules:   
+                   Blocks,
+                   RemoveComments
+

@@ -4,3 +4,15 @@
 *.hi
 
 src/Main
+
+*.log
+
+workspace/.metadata/*
+
+*.prefs
+
+.metadata/*
+
+*.bwusage
+
+*.bwinfo
