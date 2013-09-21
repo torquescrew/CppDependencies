@@ -16,3 +16,7 @@ workspace/.metadata/*
 *.bwusage
 
 *.bwinfo
+
+*.hs#
+
+workspace/Dependancies/.dist-buildwrapper/src/Main
