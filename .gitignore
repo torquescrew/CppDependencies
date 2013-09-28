@@ -19,4 +19,4 @@ workspace/.metadata/*
 
 *.hs#
 
-workspace/Dependancies/.dist-buildwrapper/src/Main
+workspace/Dependancies/.dist-buildwrapper/src/
