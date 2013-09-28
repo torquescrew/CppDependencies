@@ -1,6 +1,6 @@
 module RemoveComments where
 
-import           Data.List.Utils (join)
+import Data.List.Utils (join)
 
 removeComments :: String -> String
 removeComments = rmMultComment . rmLineComments 
@@ -25,3 +25,4 @@ rmMultComment :: String -> String
 rmMultComment ('/':'*':code) = rmMultComment (rmMultComment' code)
 rmMultComment ( c : code)    = c : rmMultComment code
 rmMultComment ( _ )          = []
+
