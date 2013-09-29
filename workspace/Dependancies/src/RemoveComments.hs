@@ -6,7 +6,7 @@ removeComments :: String -> String
 removeComments = rmMultComment . rmLineComments 
 
 rmLineComments :: String -> String
-rmLineComments code = join " " (map rmLineComment (lines code))
+rmLineComments code = join "\n" (map rmLineComment (lines code))
 
 
 rmLineComment :: String -> String

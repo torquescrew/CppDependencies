@@ -6,6 +6,7 @@ import Data.List.Utils
 myFile :: [Char]
 myFile = "/Users/tobysuggate/Desktop/LCWM4/LabChartEssentials/LabChart/ChartDraw/ChartDrawer.h"
 
+--ae = "test.cpp"
 ae = "/Users/tobysuggate/Documents/build_tool/AllEntities.cpp"
 
 --myFile = "/Users/tobysuggate/Desktop/LCWM4/Libs/CEF/include/internal/cef_types_wrappers.h"
@@ -17,6 +18,7 @@ main = do
 
 parseFile :: String -> String
 parseFile code = join "\n" (toStatements (removeComments code))  --parseFile = toStatements
+--parseFile code = removeComments code  --parseFile = toStatements
 
 typeDecKeywords = ["class", "struct", "typedef", "enum", "enum class"]
 statementBreaks = ";{}"
@@ -74,11 +76,17 @@ spltNL line code | isNewLine code = ((reverse line), code)
 
 toStatements' :: String -> String -> [String]
 toStatements' statement code
-              | hasBreak code        = newStatement:(toStatements' [] (tail code))
-                                       where newStatement = reverse $ (head code):statement
+              | hasBreak code        = ns:(toStatements' [] (tail code))
+                                       where ns = reverse $ (head code):statement
 toStatements' statement code@('#':_) = ns:(toStatements' "" rem)
                                        where both = splitAtNL code
                                              ns   = fst both
                                              rem  = snd both
 toStatements' statement (c:code)     = toStatements' (c:statement) code
 toStatements' statement []           = []
+
+
+
+
+
+
