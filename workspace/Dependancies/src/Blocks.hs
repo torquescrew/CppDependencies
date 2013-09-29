@@ -59,7 +59,7 @@ endOfInclude statement = startswith "#include " statement && (length statement) 
 
 
 toStatements :: String -> [String]
-toStatements = toStatements' ""
+toStatements = ts ""
 
 isNewLine :: String -> Bool
 isNewLine code = startswith "\n" code || startswith "\r" code || startswith "\r\n" code
@@ -73,30 +73,29 @@ spltNL line code | isNewLine code = ((reverse line), code)
                  | null code      = ("", (reverse line))
                  | otherwise      = spltNL ((head code):line) (tail code)
 
-
+{-
 toStatements' :: String -> String -> [String]
-toStatements' statement code | hasBreak code = ns:(toStatements' [] (tail code))
-                                               where ns = reverse $ (head code):statement
+toStatements' statement code
+              | hasBreak code        = ns:(toStatements' [] (tail code))
+                                       where ns = reverse $ (head code):statement
 toStatements' statement code@('#':_) = ns:(toStatements' "" rem)
                                        where both = splitAtNL code
                                              ns   = fst both
                                              rem  = snd both
 toStatements' statement (c:code)     = toStatements' (c:statement) code
 toStatements' statement []           = []
-
-
+-}
 
 
 
 ts :: String -> String -> [String]
-ts s c | hasBreak c       = ns:(ts [] (tail c))
-       | startswith "#" c = i:(ts "" rem)
-       | null c           = []
-       | otherwise        = ts ((head c):s) c
-          where ns = reverse $ (head c):s
-                both = splitAtNL c
-                i    = fst both
-                rem  = snd both
+ts line code 
+    | hasBreak code       = ns:(ts [] (tail code))
+    | startswith "#" code = (fst lines):(ts "" (snd lines))
+    | null code           = []
+    | otherwise           = ts ((head code):line) (tail code)
+       where ns    = reverse $ (head code):line
+             lines = splitAtNL code
 
 
 
