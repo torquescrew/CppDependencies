@@ -75,9 +75,8 @@ spltNL line code | isNewLine code = ((reverse line), code)
 
 
 toStatements' :: String -> String -> [String]
-toStatements' statement code
-              | hasBreak code        = ns:(toStatements' [] (tail code))
-                                       where ns = reverse $ (head code):statement
+toStatements' statement code | hasBreak code = ns:(toStatements' [] (tail code))
+                                               where ns = reverse $ (head code):statement
 toStatements' statement code@('#':_) = ns:(toStatements' "" rem)
                                        where both = splitAtNL code
                                              ns   = fst both
@@ -87,6 +86,17 @@ toStatements' statement []           = []
 
 
 
+
+
+ts :: String -> String -> [String]
+ts s c | hasBreak c       = ns:(ts [] (tail c))
+       | startswith "#" c = i:(ts "" rem)
+       | null c           = []
+       | otherwise        = ts ((head c):s) c
+          where ns = reverse $ (head c):s
+                both = splitAtNL c
+                i    = fst both
+                rem  = snd both
 
 
 
