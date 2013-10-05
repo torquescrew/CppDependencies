@@ -41,12 +41,22 @@ extrStr' str  code      = (str, code)
 beginsWithOp :: String -> Bool
 beginsWithOp code = hasAny [take 2 code] doubleOps
 
+singleOp :: String -> Bool
+singleOp (c:code) = c `elem` operators
+singleOp []       = False
 
---TODO
+
+--TODO: convert statement into tokens
 toTokens :: String -> String -> [String]
-toTokens statement c@('"':code) = (fst res):toTokens statement (snd res)
-                              	  where res = extrStr c
-toTokens statement code | beginsWithOp code = [code]
+toTokens token c@('"':code) = token:(fst res):toTokens "" (snd res)
+                              where res = extrStr c
+toTokens token (' ':code) = (reverse token):toTokens "" code
+toTokens token code | beginsWithOp code = (reverse token):(take 2 code):toTokens "" (drop 2 code)
+toTokens token code | singleOp code = (reverse token):[head code]:toTokens "" (tail code)
+toTokens token [] = (reverse token):[]
+toTokens token (c:code) = toTokens (c:token) code
+
+
 
 
 hasBreak :: String -> Bool

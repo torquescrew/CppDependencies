@@ -22,3 +22,5 @@ workspace/.metadata/*
 workspace/Dependancies/.dist-buildwrapper/src/
 
 *.swp
+
+workspace/Dependancies/src/.Blocks.hs.swp
