@@ -2,6 +2,7 @@ module Main where
 
 import RemoveComments
 import Data.List.Utils
+import Data.Char
 
 myFile :: [Char]
 myFile = "/Users/tobysuggate/Desktop/LCWM4/LabChartEssentials/LabChart/ChartDraw/ChartDrawer.h"
@@ -38,25 +39,44 @@ extrStr' str (c  :code) = extrStr' (c:str) code
 extrStr' str  code      = (str, code)
 
 
-beginsWithOp :: String -> Bool
-beginsWithOp code = hasAny [take 2 code] doubleOps
+doubleOp :: String -> Bool
+doubleOp code = hasAny [take 2 code] doubleOps
 
 singleOp :: String -> Bool
 singleOp (c:code) = c `elem` operators
 singleOp []       = False
 
-
+{-
 --TODO: convert statement into tokens
 toTokens :: String -> String -> [String]
 toTokens token c@('"':code) = token:(fst res):toTokens "" (snd res)
                               where res = extrStr c
 toTokens token (' ':code) = (reverse token):toTokens "" code
-toTokens token code | beginsWithOp code = (reverse token):(take 2 code):toTokens "" (drop 2 code)
+toTokens token code | doubleOp code = (reverse token):(take 2 code):toTokens "" (drop 2 code)
 toTokens token code | singleOp code = (reverse token):[head code]:toTokens "" (tail code)
 toTokens token [] = (reverse token):[]
 toTokens token (c:code) = toTokens (c:token) code
+-}
 
 
+toTokens :: String -> [String]
+toTokens code = filter (not . null) (tt "" code)
+
+tt :: String -> String -> [String]
+tt token code 
+    | null code           = rToken:[]
+    | isQuote code        = rToken:(fst string_code):tt "" (snd string_code)
+    | isSpace (head code) = rToken:tt "" (tail code)
+    | doubleOp code       = rToken:(take 2 code):tt "" (drop 2 code)
+    | singleOp code       = rToken:[head code]:tt "" (tail code)
+    | otherwise           = tt ((head code):token) (tail code)
+      where string_code = extrStr code
+            rToken      = reverse token
+
+
+isQuote :: String -> Bool
+isQuote ('"':_) = True
+isQuote  _      = False
 
 
 hasBreak :: String -> Bool
