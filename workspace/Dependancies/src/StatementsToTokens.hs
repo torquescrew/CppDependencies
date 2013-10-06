@@ -2,8 +2,9 @@ module StatementsToTokens where
 
 import Data.Char
 import Data.List.Utils
+import CodeToStatements
+import RemoveComments
 
-typeDecKeywords = ["class", "struct", "typedef", "enum", "enum class"]
 operators = ":;!<>{}*()&,-+= .?"
 doubleOps = ["--","++","->","==","<=",">=","::","&&","||","**","/=","!=","+=","-=","*=","()"]
 
@@ -45,3 +46,5 @@ isQuote ('"':_) = True
 isQuote  _      = False
 
 
+tokenStatements ::  String -> [[String]]
+tokenStatements code = map toTokens ((toStatements . removeComments) code)
