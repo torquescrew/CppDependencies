@@ -25,15 +25,49 @@ main = do
 
 parseFile :: String -> String
 parseFile code = join "\n" (map toT (toS code))
+--parseFile code = join "\n"  (codeToTokens code)
 
+--parse code = tokenStatements code
 
 toS ::  String -> [String]
 toS = (toStatements . removeComments)
 
-
+-- to token string
 toT ::  String -> String
 toT = (join " ") . (toTokens)
 
+
+{-
+want tokens in list of lists
+
+TODO:
+ - relocate codeToTokens
+
+for each statement of tokens, check for type dec, if true, add to list of types
+so we need a list of found types? or just return that list?
+
+foldr (:) []
+
+
+-}
+
+--checkFindTypes = findTypes [["class","cheese"],["struct","stru"]]
+
+
+
+
+findTypes :: [[String]] -> [String]
+findTypes (s:ss) | isTypeDec s = (getTypeName s):findTypes ss
+                 | otherwise   = findTypes ss
+findTypes _ = []
+
+ft ss = filter isTypeDec (codeToTokens ss)
+
+codeToTokens :: String -> [[String]]
+codeToTokens code = map toTokens ((toStatements . removeComments) code)
+
+
+--displayTokens code = join "\n" (map (join " ") (codeToTokens code))
 
 
 typeDecKeywords ::  [[Char]]
@@ -51,4 +85,5 @@ getTypeName ("typedef":statement)   = head(tail(reverse statement))
 getTypeName ("enum":"class":name:_) = name
 getTypeName ("enum":"{":_)          = "constants in enum"
 getTypeName ("enum":name:_)         = name
+getTypeName _ = error "not a type"
 

@@ -19,7 +19,7 @@ workspace/.metadata/*
 
 *.hs#
 
-workspace/Dependancies/.dist-buildwrapper/src/
+workspace/Dependancies/.dist-buildwrapper/*
 
 *.swp
 
