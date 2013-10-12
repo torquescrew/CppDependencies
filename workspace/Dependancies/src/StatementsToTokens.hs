@@ -39,6 +39,7 @@ tt token code
     | otherwise           = tt ((head code):token) (tail code)
       where string_code = extrStr code
             rToken      = reverse token
+tt _ _ = []
 
 
 isQuote :: String -> Bool

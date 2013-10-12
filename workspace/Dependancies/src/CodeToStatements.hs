@@ -18,6 +18,8 @@ ts line code
        where ns    = reverse $ (head code):line
              lines = splitAtNL code
 
+--tss line (c:code)
+
 
 hasBreak :: String -> Bool
 hasBreak code@(c:_) = hasAny [c] statementBreaks -- || endOfInclude code
@@ -37,7 +39,8 @@ splitAtNL code = spltNL "" code
 
 spltNL :: String -> String -> (String, String)
 spltNL line code | isNewLine code = ((reverse line), code)
-                 | null code      = ("", (reverse line))
+--                 | null code      = ("", (reverse line))
+                 | null code      = ((reverse line), "")
                  | otherwise      = spltNL ((head code):line) (tail code)
 
 

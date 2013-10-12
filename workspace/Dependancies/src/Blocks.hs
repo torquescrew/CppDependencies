@@ -19,13 +19,13 @@ ae = "/Users/tobysuggate/Documents/build_tool/AllEntities.cpp"
 
 main :: IO ()
 main = do
-       inpStr <- readFile ae
+       inpStr <- readFile myFile
        putStr (parseFile inpStr)
 
 
 parseFile :: String -> String
-parseFile code = join "\n" (map toT (toS code))
---parseFile code = join "\n"  (codeToTokens code)
+--parseFile code = join "\n" (map toT (toS code))
+parseFile code = join "\n"  (ft code)
 
 --parse code = tokenStatements code
 
@@ -37,31 +37,16 @@ toT ::  String -> String
 toT = (join " ") . (toTokens)
 
 
-{-
-want tokens in list of lists
-
-TODO:
- - relocate codeToTokens
-
-for each statement of tokens, check for type dec, if true, add to list of types
-so we need a list of found types? or just return that list?
-
-foldr (:) []
+testStatements = [["class","c1"],["struct","s1"]]
+test1 = "class c1 {} struct s1 {};"
 
 
--}
-
---checkFindTypes = findTypes [["class","cheese"],["struct","stru"]]
-
+ft :: String -> [String]
+ft ss = map getTypeName (filter isTypeDec (codeToTokens ss))
 
 
+typeDecStatements ss = filter isTypeDec (codeToTokens ss)
 
-findTypes :: [[String]] -> [String]
-findTypes (s:ss) | isTypeDec s = (getTypeName s):findTypes ss
-                 | otherwise   = findTypes ss
-findTypes _ = []
-
-ft ss = filter isTypeDec (codeToTokens ss)
 
 codeToTokens :: String -> [[String]]
 codeToTokens code = map toTokens ((toStatements . removeComments) code)
@@ -70,12 +55,13 @@ codeToTokens code = map toTokens ((toStatements . removeComments) code)
 --displayTokens code = join "\n" (map (join " ") (codeToTokens code))
 
 
-typeDecKeywords ::  [[Char]]
+typeDecKeywords ::  [String]
 typeDecKeywords = ["class", "struct", "typedef", "enum", "enum class"]
 
 
 isTypeDec :: [String] -> Bool
-isTypeDec statement = (head statement) `elem` typeDecKeywords
+isTypeDec (s:ss) = s `elem` typeDecKeywords
+isTypeDec _      = False
 
 
 getTypeName :: [String] -> String
@@ -85,5 +71,5 @@ getTypeName ("typedef":statement)   = head(tail(reverse statement))
 getTypeName ("enum":"class":name:_) = name
 getTypeName ("enum":"{":_)          = "constants in enum"
 getTypeName ("enum":name:_)         = name
-getTypeName _ = error "not a type"
+getTypeName _ = ""
 
