@@ -60,8 +60,9 @@ typeDecKeywords = ["class", "struct", "typedef", "enum", "enum class"]
 
 
 isTypeDec :: [String] -> Bool
-isTypeDec (s:ss) = s `elem` typeDecKeywords
-isTypeDec _      = False
+isTypeDec ("class":ss) = length ss > 2 || last ss == "{"
+isTypeDec (s:ss)       = s `elem` typeDecKeywords -- && (length ss > 2 || last ss == "{")
+isTypeDec _            = False
 
 
 getTypeName :: [String] -> String

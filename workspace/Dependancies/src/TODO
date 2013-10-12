@@ -1,0 +1,41 @@
+TODO 
+
+Long Term
+ - parse all type declarations
+ - store type decs and file names (db?)
+ - use better types unstead of strings
+ - calc approximation of type usage? string matching?
+ - calc available included types per file
+ - use types to parse function declarations
+
+
+Short Term
+ - (done)fix forward declaration error
+ - keep track of scope/namespace
+
+
+do i need to recognise type to tell if something is a function declaration? AA BB(CC);
+
+testing ideas
+ - could check if every word is accounted for
+
+
+check for function:
+[type] [optional namespace ::] [name] [(] [variable dec list] [)] [ { or ; ]
+
+
+check for variable declaration:
+type name;
+type name([name, ..]);
+type name1,name2,name3;
+type name = name or value;
+
+method parameters have only uninitialised variable declarations
+(type name)
+(type name, type name, ..)
+(type)
+(type, type, type name, ..)
+
+so we have:
+methodDec = [(] [type] [optional name] [ , or ) ] [optional methodDec]
+
