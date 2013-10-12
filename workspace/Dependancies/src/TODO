@@ -12,6 +12,8 @@ Long Term
 Short Term
  - (done)fix forward declaration error
  - keep track of scope/namespace
+ - refactor with new types
+ - move notes into relevent files?
 
 
 do i need to recognise type to tell if something is a function declaration? AA BB(CC);
@@ -39,3 +41,40 @@ method parameters have only uninitialised variable declarations
 so we have:
 methodDec = [(] [type] [optional name] [ , or ) ] [optional methodDec]
 
+Keeping track of Scope:
+
+what scope to keep track of? namespaces(named and empty)
+do we need function scope? do we care about types declared inside methods?
+ can they effect dependencies?
+
+should each statement know its context? have a special type?
+Or have a context object that's passed through? 
+
+
+Types of Context
+ - namespace
+ - class public/protected/private (default private)
+ - struct public/protected/private (default public)
+ - enum
+
+
+New Types:
+ - Token
+ - Statement
+
+Statement
+ - list of tokens
+ - context
+
+something like:
+
+type Token = String
+
+data Visibility = Public | Protected | Private
+
+data Context = Namespace { name :: Token }
+             | Class { name :: Token, visibility :: Visibility }
+	     | Struct { name :: Token, visibility :: Visibility }
+	     | Enum { name :: Token } deriving (Show, Eq)
+
+data Statement = Statement { tokens :: [Token], context :: [Context] } deriving (Show, Eq)
