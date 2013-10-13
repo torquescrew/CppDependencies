@@ -13,7 +13,7 @@ ts :: String -> String -> [String]
 ts line code 
     | hasBreak code       = ns:(ts [] (tail code))
     | startswith "#" code = (fst lines):(ts "" (snd lines))
-    | null code           = []
+    | null code           = [] -- does this throw away line?
     | otherwise           = ts ((head code):line) (tail code)
        where ns    = reverse $ (head code):line
              lines = splitAtNL code
@@ -32,6 +32,7 @@ endOfInclude statement = startswith "#include " statement && (length statement) 
 
 isNewLine :: String -> Bool
 isNewLine code = startswith "\n" code || startswith "\r" code || startswith "\r\n" code
+
 
 splitAtNL :: String -> (String, String)
 splitAtNL code = spltNL "" code

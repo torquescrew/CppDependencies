@@ -8,8 +8,10 @@ import RemoveComments
 operators = ":;!<>{}*()&,-+= .?"
 doubleOps = ["--","++","->","==","<=",">=","::","&&","||","**","/=","!=","+=","-=","*=","()"]
 
-extrStr :: String -> (String, String)
-extrStr code = extrStr' "" code
+type Token = String
+
+takeString :: String -> (String, String)
+takeString code = extrStr' "" code
 
 extrStr' :: String -> String -> (String, String)
 extrStr' ""  ('"':code) = extrStr' "\"" code
@@ -26,10 +28,10 @@ singleOp (c:code) = c `elem` operators
 singleOp []       = False
 
 
-toTokens :: String -> [String]
+toTokens :: String -> [Token]
 toTokens code = filter (not . null) (tt "" code)
 
-tt :: String -> String -> [String]
+tt :: String -> String -> [Token]
 tt token code 
     | null code           = rToken:[]
     | isQuote code        = rToken:(fst string_code):tt "" (snd string_code)
@@ -37,9 +39,8 @@ tt token code
     | doubleOp code       = rToken:(take 2 code):tt "" (drop 2 code)
     | singleOp code       = rToken:[head code]:tt "" (tail code)
     | otherwise           = tt ((head code):token) (tail code)
-      where string_code = extrStr code
+      where string_code = takeString code
             rToken      = reverse token
---tt _ _ = []
 
 
 isQuote :: String -> Bool
@@ -47,5 +48,5 @@ isQuote ('"':_) = True
 isQuote  _      = False
 
 
-tokenStatements ::  String -> [[String]]
+tokenStatements ::  String -> [[Token]]
 tokenStatements code = map toTokens ((toStatements . removeComments) code)
