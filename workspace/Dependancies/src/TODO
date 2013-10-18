@@ -78,3 +78,12 @@ data Context = Namespace { name :: Token }
 	     | Enum { name :: Token } deriving (Show, Eq)
 
 data Statement = Statement { tokens :: [Token], context :: [Context] } deriving (Show, Eq)
+
+
+changing context:
+begins with
+
+class and {, 
+namespace and {, 
+struct and {, 
+visibility and :

@@ -24,8 +24,8 @@ main = do
 
 
 parseFile :: String -> String
---parseFile code = join "\n" (map toT (toS code))
-parseFile code = join "\n"  (ft code)
+parseFile code = join "\n" (map toT (toS code))
+--parseFile code = join "\n"  (ft code)
 
 --parse code = tokenStatements code
 
