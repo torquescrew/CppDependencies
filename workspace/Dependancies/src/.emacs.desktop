@@ -1,0 +1,62 @@
+;; -*- mode: emacs-lisp; coding: emacs-mule; -*-
+;; --------------------------------------------------------------------------
+;; Desktop File for Emacs
+;; --------------------------------------------------------------------------
+;; Created Sat Oct 19 18:47:14 2013
+;; Desktop file format version 206
+;; Emacs version 24.3.1
+
+;; Global section:
+(setq desktop-missing-file-warning nil)
+(setq tags-file-name nil)
+(setq tags-table-list nil)
+(setq search-ring nil)
+(setq regexp-search-ring nil)
+(setq register-alist nil)
+(setq file-name-history '("~/Documents/Repos/CppDependencies/workspace/Dependancies/src/" "~/.emacs.d/.emacs" "~/Documents/Repos/CppDependencies/workspace/Dependancies/src/Blocks.hs" "~/Documents/Repos/CppDependencies/workspace/Dependancies/src/CodeToStatements.hs" "~/.emacs.d/elpa/ghc-1.10.2/ghc-autoloads.el" "~/Documents/Repos/CppDependencies/workspace/Dependancies/src/Statement.hs" "~/Documents/Repos/CppDependencies/workspace/Dependancies/src/StatementsToTokens.hs" "~/.emacs.d/elpa/sr-speedbar-0.1.8/sr-speedbar-autoloads.el" "~/Documents/Repos/CppDependencies/workspace/Dependancies/src/Main.hs" "~/.emacs.d/elpa/flycheck-0.14.1/flycheck-autoloads.el" "~/.emacs.d/elpa/archives/gnu/archive-contents" "~/.emacs.d/elpa/archives/marmalade/archive-contents" "~/.emacs.d/init.el" "~/Documents/Repos/CppDependencies/workspace/Dependancies/src/RemoveComments.hs" "~/Documents/Repos/CppDependencies/workspace/Dependancies/src/FindTypeDecs.hs" "~/.emacs" "~/Documents/Repos/CppDependencies/workspace/Dependancies/src/test.cpp" "~/Documents/Repos/CppDependencies/workspace/Dependancies/src/TODO" "~/Documents/workspace/BuildToolH/src/Entities.hs" "~/Desktop/LCWM4/LabChartEssentials/LabChart/ChartDraw/ChartDrawer.h" "~/Documents/Repos/CppDependencies/workspace/Dependancies/Dependancies.cabal"))
+
+;; Buffer section -- buffers listed in same order as in buffer list:
+(desktop-create-buffer 206
+  "/Users/tobysuggate/Documents/Repos/CppDependencies/workspace/Dependancies/src/CodeToStatements.hs"
+  "CodeToStatements.hs"
+  'haskell-mode
+  '(linum-mode flycheck-mode)
+  140
+  '(1 nil)
+  nil
+  nil
+  '((tab-width . 8) (indent-tabs-mode) (buffer-file-coding-system . undecided-unix)))
+
+(desktop-create-buffer 206
+  "/Users/tobysuggate/Documents/Repos/CppDependencies/workspace/Dependancies/src/Blocks.hs"
+  "Blocks.hs"
+  'haskell-mode
+  '(linum-mode flycheck-mode)
+  1301
+  '(1301 nil)
+  nil
+  nil
+  '((tab-width . 8) (indent-tabs-mode) (buffer-file-coding-system . undecided-unix)))
+
+(desktop-create-buffer 206
+  "/Users/tobysuggate/Documents/Repos/CppDependencies/workspace/Dependancies/src/FindTypeDecs.hs"
+  "FindTypeDecs.hs"
+  'haskell-mode
+  '(linum-mode flycheck-mode)
+  1
+  '(1 nil)
+  nil
+  nil
+  '((tab-width . 8) (indent-tabs-mode) (buffer-file-coding-system . undecided-unix)))
+
+(desktop-create-buffer 206
+  "/Users/tobysuggate/Documents/Repos/CppDependencies/workspace/Dependancies/src/RemoveComments.hs"
+  "RemoveComments.hs"
+  'haskell-mode
+  '(linum-mode flycheck-mode)
+  1
+  '(1 nil)
+  nil
+  nil
+  '((tab-width . 8) (indent-tabs-mode) (buffer-file-coding-system . undecided-unix)))
+

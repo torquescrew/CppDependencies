@@ -24,8 +24,8 @@ doubleOp :: String -> Bool
 doubleOp code = hasAny [take 2 code] doubleOps
 
 singleOp :: String -> Bool
-singleOp (c:code) = c `elem` operators
-singleOp []       = False
+singleOp (c:_) = c `elem` operators
+singleOp []    = False
 
 
 toTokens :: String -> [Token]
