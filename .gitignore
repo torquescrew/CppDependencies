@@ -28,3 +28,5 @@ workspace/Dependancies/src/.Blocks.hs.swp
 workspace/Dependancies/src/#TODO#
 
 workspace/Dependancies/src/.#TODO
+
+*.hs~

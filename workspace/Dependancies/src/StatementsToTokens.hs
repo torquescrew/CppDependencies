@@ -2,10 +2,13 @@ module StatementsToTokens where
 
 import Data.Char
 import Data.List.Utils
-import CodeToStatements
+import CodeToLines
 import RemoveComments
 
+operators :: [Char]
 operators = ":;!<>{}*()&,-+= .?"
+
+doubleOps :: [String]
 doubleOps = ["--","++","->","==","<=",">=","::","&&","||","**","/=","!=","+=","-=","*=","()"]
 
 type Token = String
@@ -49,4 +52,4 @@ isQuote  _      = False
 
 
 tokenStatements ::  String -> [[Token]]
-tokenStatements code = map toTokens ((toStatements . removeComments) code)
+tokenStatements code = map toTokens ((toLines . removeComments) code)
