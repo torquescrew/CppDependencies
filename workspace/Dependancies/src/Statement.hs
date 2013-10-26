@@ -10,7 +10,7 @@ data Context = Namespace { contextName :: Token }
              | Class { contextName :: Token, visibility :: Visibility }
 	     | Struct { contextName :: Token, visibility :: Visibility }
 	     | Enum { contextName :: Token } 
-             | OpenParen
+             | OpenParen { contextName :: Token }
                deriving (Show, Eq)
 
 
@@ -23,7 +23,7 @@ showContext (Namespace n) = "namespace_" ++ n ++ "_{"
 showContext (Class n v)   = "class_" ++ n ++ "_(" ++ show v ++ ")_{"
 showContext (Struct n v)  = "struct_" ++ n ++ "_(" ++ show v ++ ")_{"
 showContext (Enum n)      = "enum_" ++ n ++ "_{"
-showContext (OpenParen)   = "{"
+showContext (OpenParen _) = "{"
 
 
 showTokens :: [Token] -> String
@@ -46,7 +46,7 @@ contextChange    ("public":":":_)    = True
 contextChange    ("protected":":":_) = True
 contextChange    ("private":":":_)   = True
 contextChange ts | last ts == "{"    = True
-                 | head ts == "}"    = True
+                 | last ts == "}"    = True
 contextChange _                      = False
 
 
@@ -57,8 +57,7 @@ tokensToStatement ts@("struct":n:_) c | last ts == "{"    = Statement ts ((Struc
 tokensToStatement ts@("public":":":_) c                   = Statement ts (setVisibility c Public)
 tokensToStatement ts@("protected":":":_) c                = Statement ts (setVisibility c Protected)
 tokensToStatement ts@("private":":":_) c                  = Statement ts (setVisibility c Private)
--- tokensToStatement [] c                                    = Statement [] c
-tokensToStatement ts c | last ts == "{"                   = Statement ts (OpenParen:c)
+tokensToStatement ts c | last ts == "{"                   = Statement ts (OpenParen "":c)
                        | last ts == "}"                   = Statement ts (tail c)
 tokensToStatement ts c                                    = Statement ts c
 
@@ -78,7 +77,8 @@ toStatements ts = toStatements' ts []
 show2 :: Statement -> String
 show2 s = showTokens (tokens s) ++ " // " ++ scs (context s) ++ "\n"
 
-
+scopeStr :: Statement -> String
+scopeStr s = join "::" (map contextName (reverse $ context s))
 
 
 {-
