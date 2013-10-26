@@ -38,16 +38,16 @@ setVisibility ((Class n _):cs) v = (Class n v):cs
 setVisibility  cs              v = error ("Called setVisibility of " ++ (show v) ++ " " ++ " with context:" ++ (show cs))
 
 
-contextChange :: [Token]  -> Bool
-contextChange ts@("class":_)         = last ts == "{"
-contextChange ts@("namespace":_)     = last ts == "{"
-contextChange ts@("struct":_)        = last ts == "{"
-contextChange    ("public":":":_)    = True
-contextChange    ("protected":":":_) = True
-contextChange    ("private":":":_)   = True
-contextChange ts | last ts == "{"    = True
-                 | last ts == "}"    = True
-contextChange _                      = False
+-- contextChange :: [Token]  -> Bool
+-- contextChange ts@("class":_)         = last ts == "{"
+-- contextChange ts@("namespace":_)     = last ts == "{"
+-- contextChange ts@("struct":_)        = last ts == "{"
+-- contextChange    ("public":":":_)    = True
+-- contextChange    ("protected":":":_) = True
+-- contextChange    ("private":":":_)   = True
+-- contextChange ts | last ts == "{"    = True
+--                  | last ts == "}"    = True
+-- contextChange _                      = False
 
 
 tokensToStatement :: [Token] -> [Context] -> Statement
@@ -58,7 +58,7 @@ tokensToStatement ts@("public":":":_) c                   = Statement ts (setVis
 tokensToStatement ts@("protected":":":_) c                = Statement ts (setVisibility c Protected)
 tokensToStatement ts@("private":":":_) c                  = Statement ts (setVisibility c Private)
 tokensToStatement ts c | last ts == "{"                   = Statement ts (OpenParen "":c)
-                       | last ts == "}"                   = Statement ts (tail c)
+                       | "}" `elem` ts                    = Statement ts (tail c)
 tokensToStatement ts c                                    = Statement ts c
 
 
@@ -78,11 +78,20 @@ show2 :: Statement -> String
 show2 s = showTokens (tokens s) ++ " // " ++ scs (context s) ++ "\n"
 
 scopeStr :: Statement -> String
-scopeStr s = join "::" (map contextName (reverse $ context s))
+-- scopeStr s = join "::" (map contextName (reverse $ context s))
+scopeStr s = join "::" (map contextName (reverse (filter notParen (context s))))
+
+
+notParen :: Context -> Bool
+notParen (OpenParen {}) = False
+notParen  _             = True
+
+--goos = [ x | x@(Goo {}) <- foos]
 
 
 {-
-How to go from [[Token]] -> [Statement]?
+
+
 
 
 -}

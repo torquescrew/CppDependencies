@@ -64,7 +64,10 @@ isTypeDec  _                          = False
 
 
 getTypeName :: Statement -> Token
-getTypeName s = scopeStr s ++ "::" ++  getTypeName' (tokens s)
+getTypeName s = scopeStr s ++ "::" ++  getTypeName' (tokens s) -- ++ " - " ++ join " " (tokens s)
+-- getTypeName s = join "::" (map contextName (reverse $ context s))
+-- getTypeName s = show (reverse $ context s)
+-- getTypeName s = show s
 
 
 --Should this be in Statement?
