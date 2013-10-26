@@ -16,7 +16,7 @@ main = do
 
 parseFile :: String -> String
 -- parseFile code = join "\n" (map toT (toS code))
-parseFile code = join "\n" (map show (codeToStatements code))
+parseFile code = join "\n" (map show2 (codeToStatements code))
 
 
 toS ::  String -> [String]
@@ -51,6 +51,7 @@ isTypeDec :: [Token] -> Bool
 isTypeDec ("class":ss) = length ss > 2 || last ss == "{"
 isTypeDec (s:_)        = s `elem` typeDecKeywords -- && (length ss > 2 || last ss == "{")
 isTypeDec  _           = False
+
 
 
 getTypeName :: [Token] -> Token

@@ -18,9 +18,36 @@ data Statement = Statement { tokens :: [Token], context :: [Context] }
                  deriving (Show, Eq)
 
 
+showContext :: Context -> String
+showContext (Namespace n) = "namespace_" ++ n ++ "_{"
+showContext (Class n v)   = "class_" ++ n ++ "_(" ++ show v ++ ")_{"
+showContext (Struct n v)  = "struct_" ++ n ++ "_(" ++ show v ++ ")_{"
+showContext (Enum n)      = "enum_" ++ n ++ "_{"
+showContext (OpenParen)   = "{"
+
+
+showTokens :: [Token] -> String
+showTokens ts = join " " ts
+
+scs :: [Context] -> String
+scs cs = join ", " (map showContext cs)
+
+
 setVisibility :: [Context] -> Visibility -> [Context]
 setVisibility ((Class n _):cs) v = (Class n v):cs
 setVisibility  cs              v = error ("Called setVisibility of " ++ (show v) ++ " " ++ " with context:" ++ (show cs))
+
+
+contextChange :: [Token]  -> Bool
+contextChange ts@("class":_)         = last ts == "{"
+contextChange ts@("namespace":_)     = last ts == "{"
+contextChange ts@("struct":_)        = last ts == "{"
+contextChange    ("public":":":_)    = True
+contextChange    ("protected":":":_) = True
+contextChange    ("private":":":_)   = True
+contextChange ts | last ts == "{"    = True
+                 | head ts == "}"    = True
+contextChange _                      = False
 
 
 tokensToStatement :: [Token] -> [Context] -> Statement
@@ -30,23 +57,27 @@ tokensToStatement ts@("struct":n:_) c | last ts == "{"    = Statement ts ((Struc
 tokensToStatement ts@("public":":":_) c                   = Statement ts (setVisibility c Public)
 tokensToStatement ts@("protected":":":_) c                = Statement ts (setVisibility c Protected)
 tokensToStatement ts@("private":":":_) c                  = Statement ts (setVisibility c Private)
+-- tokensToStatement [] c                                    = Statement [] c
 tokensToStatement ts c | last ts == "{"                   = Statement ts (OpenParen:c)
-                       | head ts == "}"                   = Statement ts (tail c)
+                       | last ts == "}"                   = Statement ts (tail c)
 tokensToStatement ts c                                    = Statement ts c
 
 
--- TODO: Check it works, then try remove recursion.
+-- TODO: Try remove recursion.
 toStatements' :: [[Token]] -> [Context] -> [Statement]
 toStatements' (t:ts) c = newS:toStatements' ts (context newS)
-                        where newS = tokensToStatement t c
+                         where newS = tokensToStatement t c
 toStatements' []     _ = []
 
 
 toStatements :: [[Token]] -> [Statement]
+-- toStatements ts = toStatements' (filter contextChange ts) []
 toStatements ts = toStatements' ts []
 
-sToString :: Statement -> String
-sToString s = (show s) ++ "\n"
+
+show2 :: Statement -> String
+show2 s = showTokens (tokens s) ++ " // " ++ scs (context s) ++ "\n"
+
 
 
 
