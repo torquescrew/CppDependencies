@@ -8,8 +8,8 @@ data Visibility = Public | Protected | Private
 
 data Context = Namespace { contextName :: Token }
              | Class { contextName :: Token, visibility :: Visibility }
-	     | Struct { contextName :: Token, visibility :: Visibility }
-	     | Enum { contextName :: Token } 
+             | Struct { contextName :: Token, visibility :: Visibility }
+             | Enum { contextName :: Token } 
              | OpenParen { contextName :: Token }
                deriving (Show, Eq)
 

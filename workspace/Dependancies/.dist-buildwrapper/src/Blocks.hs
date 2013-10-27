@@ -2,89 +2,81 @@ module Main where
 
 import RemoveComments
 import Data.List.Utils
-import CodeToStatements
+import CodeToLines
 import StatementsToTokens
+import Strings
+import Statement
 
-
-source ::  [Char]
-source = "bool operator()(const IChartRecordDrawer *p1,const IChartRecordDrawer *p2)\n   {\n   long drawLayer1;\n   p1->GetLayer(&drawLayer1);\n   long drawLayer2;\n   p2->GetLayer(&drawLayer2);\n   return drawLayer1<drawLayer2;\n   }"
-
-myFile :: [Char]
-myFile = "/Users/tobysuggate/Desktop/LCWM4/LabChartEssentials/LabChart/ChartDraw/ChartDrawer.h"
-
---ae = "test.cpp"
-ae ::  [Char]
-ae = "/Users/tobysuggate/Documents/build_tool/AllEntities.cpp"
---myFile = "/Users/tobysuggate/Desktop/LCWM4/Libs/CEF/include/internal/cef_types_wrappers.h"
+type Code = String
 
 main :: IO ()
 main = do
-       inpStr <- readFile ae
+       inpStr <- readFile chartDrawer
        putStr (parseFile inpStr)
 
 
 parseFile :: String -> String
-parseFile code = join "\n" (map toT (toS code))
---parseFile code = join "\n"  (codeToTokens code)
+-- parseFile code = join "\n" (map toT (toS code))
+-- parseFile code = join "\n" (map show2 (codeToStatements code))
+parseFile code = join "\n" (ft code)
 
---parse code = tokenStatements code
 
-toS ::  String -> [String]
-toS = (toStatements . removeComments)
+toS ::  Code -> [String]
+toS = (toLines . removeComments)
 
 -- to token string
 toT ::  String -> String
 toT = (join " ") . (toTokens)
 
 
-{-
-want tokens in list of lists
 
-TODO:
- - relocate codeToTokens
-
-for each statement of tokens, check for type dec, if true, add to list of types
-so we need a list of found types? or just return that list?
-
-foldr (:) []
+ft :: Code  -> [Token]
+ft code = map getTypeName (filter isTypeDec (codeToStatements code))
 
 
--}
-
---checkFindTypes = findTypes [["class","cheese"],["struct","stru"]]
-
+-- typeDecStatements :: String -> [[String]]
+-- typeDecStatements ss = filter isTypeDec' (codeToTokens ss)
 
 
-
-findTypes :: [[String]] -> [String]
-findTypes (s:ss) | isTypeDec s = (getTypeName s):findTypes ss
-                 | otherwise   = findTypes ss
-findTypes _ = []
-
-ft :: String -> [[String]]
-ft ss = filter isTypeDec (codeToTokens ss)
-
-codeToTokens :: String -> [[String]]
-codeToTokens code = map toTokens ((toStatements . removeComments) code)
+codeToTokens :: Code -> [[Token]]
+codeToTokens code = map toTokens ((toLines . removeComments) code)
 
 
---displayTokens code = join "\n" (map (join " ") (codeToTokens code))
+codeToStatements :: Code -> [Statement]
+codeToStatements code = toStatements (codeToTokens code)
 
 
-typeDecKeywords ::  [[Char]]
+typeDecKeywords :: [Token]
 typeDecKeywords = ["class", "struct", "typedef", "enum", "enum class"]
 
 
-isTypeDec :: [String] -> Bool
-isTypeDec statement = (head statement) `elem` typeDecKeywords
+-- isTypeDec' :: [Token] -> Bool
+-- isTypeDec' ("class":ss) = length ss > 2 || last ss == "{"
+-- isTypeDec' (s:_)        = s `elem` typeDecKeywords -- && (length ss > 2 || last ss == "{")
+-- isTypeDec'  _           = False
 
 
-getTypeName :: [String] -> String
-getTypeName ("class":name:_)        = name
-getTypeName ("struct":name:_)       = name
-getTypeName ("typedef":statement)   = head(tail(reverse statement))
-getTypeName ("enum":"class":name:_) = name
-getTypeName ("enum":"{":_)          = "constants in enum"
-getTypeName ("enum":name:_)         = name
-getTypeName _ = error "not a type"
+isTypeDec :: Statement -> Bool
+isTypeDec (Statement ("class":ss) _ ) = length ss > 2 || last ss == "{"
+isTypeDec (Statement (s:_) _)         = s `elem` typeDecKeywords
+isTypeDec  _                          = False
+
+
+
+getTypeName :: Statement -> Token
+getTypeName s = scopeStr s ++ "::" ++  getTypeName' (tokens s) -- ++ " - " ++ join " " (tokens s)
+-- getTypeName s = join "::" (map contextName (reverse $ context s))
+-- getTypeName s = show (reverse $ context s)
+-- getTypeName s = show s
+
+
+--Should this be in Statement?
+getTypeName' :: [Token] -> Token
+getTypeName' ("class":name:_)        = name
+getTypeName' ("struct":name:_)       = name
+getTypeName' ("typedef":statement)   = head(tail(reverse statement))
+getTypeName' ("enum":"class":name:_) = name
+getTypeName' ("enum":"{":_)          = "constants in enum"
+getTypeName' ("enum":name:_)         = name
+getTypeName'  _                      = ""
 
